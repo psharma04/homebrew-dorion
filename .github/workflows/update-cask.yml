@@ -1,43 +1,45 @@
-name: Update Dorion Cask
+name: Homebrew Cask Auto-update
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight
-  workflow_dispatch:
+    - cron: "0 0 * * *" # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual trigger of the action
 
 jobs:
-  update-cask:
+  livecheck:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Homebrew
-        run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          eval "$(/opt/homebrew/bin/brew shellenv)"
+    - name: Install Homebrew
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-      - name: Check for updates
-        id: livecheck
-        run: |
-          brew tap homebrew/cask
-          brew livecheck dorion --quiet || echo "No updates available" > no_update.txt
-          
-      - name: Update cask if needed
-        run: |
-          if [ -f no_update.txt ]; then
-            echo "No updates found."
-          else
-            # Update the cask file
-            brew update --cask dorion
-            
-            # Commit changes if the cask was updated
-            git config --local user.name "GitHub Action"
-            git config --local user.email "action@github.com"
-            git add Casks/dorion.rb
-            git commit -m "Update Dorion to latest version" || echo "No changes to commit"
-            git push origin HEAD:main
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Run brew livecheck
+      run: |
+        brew tap homebrew/cask
+        brew tap psharma04/dorion
+        brew install livecheck
+        brew livecheck dorion
 
+    - name: Update cask if new version is found
+      run: |
+        NEW_VERSION=$(brew livecheck dorion --newer-only --json | jq -r '.[0].version')
+        CURRENT_VERSION=$(grep -E '^  version' Casks/dorion.rb | awk '{print $2}' | tr -d '"')
+
+        if [ "$NEW_VERSION" != "$CURRENT_VERSION" ]; then
+          # Update the version and sha256 in the cask file
+          sed -i '' "s/$CURRENT_VERSION/$NEW_VERSION/g" Casks/dorion.rb
+
+          # Commit and push the changes directly to the main branch
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git checkout main
+          git add Casks/dorion.rb
+          git commit -m "Update Dorion cask to $NEW_VERSION"
+          git push origin main
+        else
+          echo "No new version found"
+        fi
