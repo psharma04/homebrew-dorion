@@ -67,12 +67,3 @@ jobs:
         git add Casks/dorion.rb
         git commit -m "Update Dorion Cask to version ${{ env.version }}"
         git push
-
-    - name: Create a Pull Request
-      uses: peter-evans/create-pull-request@v5
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Update Dorion Cask to version ${{ env.version }}"
-        branch: "auto-update-cask"
-        title: "Update Dorion Cask to version ${{ env.version }}"
-        body: "This PR updates Dorion to version ${{ env.version }}."
