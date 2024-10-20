@@ -40,25 +40,32 @@ jobs:
         sha256_arm=$(shasum -a 256 Dorion_aarch64.dmg | cut -d " " -f 1)
         echo "sha256_arm=$sha256_arm" >> $GITHUB_ENV
 
-    - name: Update Cask formula
+    - name: Update Cask formula with Ruby script
       run: |
-        version=${{ env.version }}
-        sha256_x64=${{ env.sha256_x64 }}
-        sha256_arm=${{ env.sha256_arm }}
-        
-        # Update version, urls, and sha256 in the formula
-        sed -i '' "s/version \".*\"/version \"$version\"/" Casks/dorion.rb
-        sed -i '' "s/sha256 \".*\"/sha256 \"$sha256_x64\"/" Casks/dorion.rb
-        sed -i '' "s/sha256 \".*\"/sha256 \"$sha256_arm\"/" Casks/dorion.rb
-        sed -i '' "s|url \".*x64.dmg\"|url \"$download_x64\"|" Casks/dorion.rb
-        sed -i '' "s|url \".*aarch64.dmg\"|url \"$download_arm\"|" Casks/dorion.rb
+        ruby -e "
+          require 'fileutils'
+          cask_file = 'Casks/dorion.rb'
+          version = ENV['version']
+          sha256_x64 = ENV['sha256_x64']
+          sha256_arm = ENV['sha256_arm']
+          download_x64 = ENV['download_x64']
+          download_arm = ENV['download_arm']
+          
+          cask_content = File.read(cask_file)
+          cask_content.gsub!(/version \".*\"/, \"version \\\"\#{version}\\\"\")
+          cask_content.gsub!(/sha256 \".*\"/, \"sha256 \\\"\#{sha256_x64}\\\"\")
+          cask_content.gsub!(/sha256 \".*\"/, \"sha256 \\\"\#{sha256_arm}\\\"\")
+          cask_content.gsub!(/url \".*x64\.dmg\"/, \"url \\\"\#{download_x64}\\\"\")
+          cask_content.gsub!(/url \".*aarch64\.dmg\"/, \"url \\\"\#{download_arm}\\\"\")
+          File.write(cask_file, cask_content)
+        "
 
     - name: Commit changes
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "github-actions@github.com"
         git add Casks/dorion.rb
-        git commit -m "Update Dorion Cask to version $version"
+        git commit -m "Update Dorion Cask to version ${{ env.version }}"
         git push
 
     - name: Create a Pull Request
