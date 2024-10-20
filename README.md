@@ -1,16 +1,16 @@
-# Psharma04 Dorion
+# Psharma04's Dorion Tap
 
-## How do I install these formulae?
+## How do I install Dorion via Homebrew?
 
-`brew install psharma04/dorion/<formula>`
+`brew install psharma04/dorion/dorion`
 
-Or `brew tap psharma04/dorion` and then `brew install <formula>`.
+Or `brew tap psharma04/dorion` and then `brew install --cask dorion`.
 
 Or, in a [`brew bundle`](https://github.com/Homebrew/homebrew-bundle) `Brewfile`:
 
 ```ruby
 tap "psharma04/dorion"
-brew "<formula>"
+brew "dorion"
 ```
 
 ## Documentation
