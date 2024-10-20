@@ -45,12 +45,13 @@ jobs:
         version=${{ env.version }}
         sha256_x64=${{ env.sha256_x64 }}
         sha256_arm=${{ env.sha256_arm }}
+        
         # Update version, urls, and sha256 in the formula
         sed -i '' "s/version \".*\"/version \"$version\"/" Casks/dorion.rb
         sed -i '' "s/sha256 \".*\"/sha256 \"$sha256_x64\"/" Casks/dorion.rb
         sed -i '' "s/sha256 \".*\"/sha256 \"$sha256_arm\"/" Casks/dorion.rb
-        sed -i '' "s|url \".*\"|url \"$download_x64\"|" Casks/dorion.rb
-        sed -i '' "s|url \".*\"|url \"$download_arm\"|" Casks/dorion.rb
+        sed -i '' "s|url \".*x64.dmg\"|url \"$download_x64\"|" Casks/dorion.rb
+        sed -i '' "s|url \".*aarch64.dmg\"|url \"$download_arm\"|" Casks/dorion.rb
 
     - name: Commit changes
       run: |
