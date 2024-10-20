@@ -17,9 +17,7 @@ jobs:
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        brew tap homebrew/cask
         brew tap psharma04/dorion
-        brew install livecheck
         brew livecheck dorion
         NEW_VERSION=$(brew livecheck dorion --newer-only --json | jq -r '.[0].version')
         CURRENT_VERSION=$(grep -E '^  version' Casks/dorion.rb | awk '{print $2}' | tr -d '"')
