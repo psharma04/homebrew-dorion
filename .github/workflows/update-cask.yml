@@ -1,0 +1,43 @@
+name: Update Dorion Cask
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight
+  workflow_dispatch:
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+
+      - name: Check for updates
+        id: livecheck
+        run: |
+          brew tap homebrew/cask
+          brew livecheck dorion --quiet || echo "No updates available" > no_update.txt
+          
+      - name: Update cask if needed
+        run: |
+          if [ -f no_update.txt ]; then
+            echo "No updates found."
+          else
+            # Update the cask file
+            brew update --cask dorion
+            
+            # Commit changes if the cask was updated
+            git config --local user.name "GitHub Action"
+            git config --local user.email "action@github.com"
+            git add Casks/dorion.rb
+            git commit -m "Update Dorion to latest version" || echo "No changes to commit"
+            git push origin HEAD:main
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
