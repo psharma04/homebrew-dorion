@@ -13,19 +13,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Install Homebrew
+    - name: Install Homebrew, check and update
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    - name: Run brew livecheck
-      run: |
         brew tap homebrew/cask
         brew tap psharma04/dorion
         brew install livecheck
         brew livecheck dorion
-
-    - name: Update cask if new version is found
-      run: |
         NEW_VERSION=$(brew livecheck dorion --newer-only --json | jq -r '.[0].version')
         CURRENT_VERSION=$(grep -E '^  version' Casks/dorion.rb | awk '{print $2}' | tr -d '"')
 
