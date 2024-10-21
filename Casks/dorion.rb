@@ -32,13 +32,12 @@ cask "dorion" do
   ]
 
   caveats do
-    caveats do
-      <<~EOS
-        If opening Dorion gives you "Dorion.app is damaged and cannot be opened", MacOS is lying to you and you may just need to run:
-  
-          sudo xattr -rd com.apple.quarantine /Applications/Dorion.app
-  
-        Alternatively, you can open the Privacy & Security settings pane and scroll down to the Security section to remove the quarantine.
-      EOS
+    <<~EOS
+      If opening Dorion gives you "Dorion.app is damaged and cannot be opened", MacOS is lying to you and you may just need to run:
+
+        sudo xattr -rd com.apple.quarantine /Applications/Dorion.app
+
+      Alternatively, you can open the Privacy & Security settings pane and scroll down to the Security section to remove the quarantine.
+    EOS
   end
 end
