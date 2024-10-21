@@ -13,7 +13,7 @@ cask "dorion" do
   end
 
   name "Dorion"
-  desc "An alternative Discord client aimed towards lower-spec or storage-sensitive PCs that supports themes, plugins, and more!"
+  desc "Alternative Discord client aimed towards lower-spec devices"
   homepage "https://github.com/SpikeHD/Dorion"
 
   livecheck do
