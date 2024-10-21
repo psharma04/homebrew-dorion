@@ -1,12 +1,11 @@
 cask "dorion" do
   version "6.2.0"
 
-  on_intel do
-    url "https://github.com/SpikeHD/Dorion/releases/download/v#{version}/Dorion_#{version}_x64.dmg"
-  end
-
   on_arm do
     url "https://github.com/SpikeHD/Dorion/releases/download/v#{version}/Dorion_#{version}_aarch64.dmg"
+  end
+  on_intel do
+    url "https://github.com/SpikeHD/Dorion/releases/download/v#{version}/Dorion_#{version}_x64.dmg"
   end
 
   name "Dorion"
