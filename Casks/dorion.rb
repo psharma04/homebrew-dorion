@@ -1,13 +1,13 @@
 cask "dorion" do
-  version "6.0.0"
+  version "6.2.0"
 
   on_arm do
     url "https://github.com/SpikeHD/Dorion/releases/download/v#{version}/Dorion_#{version}_aarch64.dmg"
-    sha256 "1c67184aa1b2ab3fcb2a3eed9560a6aa20af6cf57d96aeaa733cd820decee197"
+    sha256 "6f59f1b5725d08c42394ea42df7587741624927558f3d0e49be0a3f32727d107"
   end
   on_intel do
     url "https://github.com/SpikeHD/Dorion/releases/download/v#{version}/Dorion_#{version}_x64.dmg"
-    sha256 "de0c7e0994e2a98681fd87e6e74a340fa5a50a7f89bd8cad0eddc22630773703"
+    sha256 "133a24b2cfbfb108b07ff6cad6a75b5da7cb46abc2484c5d92cd22340fdb70b9"
   end
 
   name "Dorion"
