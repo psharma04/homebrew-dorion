@@ -18,13 +18,12 @@ jobs:
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         brew tap psharma04/dorion
-        brew livecheck dorion
         cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/psharma04/homebrew-dorion
-        NEW_VERSION=$(brew livecheck dorion --newer-only --json | jq -r '.[0].version')
+        NEW_VERSION=$(brew livecheck dorion --newer-only --json | jq -r '.[0].version.latest')
         CURRENT_VERSION=$(grep -E '^  version' Casks/dorion.rb | awk '{print $2}' | tr -d '"')
 
         if [ "$NEW_VERSION" != "$CURRENT_VERSION" ]; then
-          # Update the version and sha256 in the cask file
+          # Update the version in the cask file
           sed -i '' "s/$CURRENT_VERSION/$NEW_VERSION/g" Casks/dorion.rb
 
           # Commit and push the changes directly to the main branch
