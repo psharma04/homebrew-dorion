@@ -24,7 +24,7 @@ jobs:
 
         if [ "$NEW_VERSION" != "$CURRENT_VERSION" ]; then
           # Update the version in the cask file
-          sed -i '' "s/$CURRENT_VERSION/$NEW_VERSION/g" Casks/dorion.rb
+          sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" Casks/dorion.rb
 
           # Commit and push the changes directly to the main branch
           git config --global user.name "github-actions"
