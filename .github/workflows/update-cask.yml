@@ -20,7 +20,7 @@ jobs:
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         brew tap psharma04/dorion
-        cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/psharma04/homebrew-dorion
+        cd "/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/psharma04/homebrew-dorion"
         NEW_VERSION=$(brew livecheck dorion --newer-only --json | jq -r '.[0].version.latest')
         CURRENT_VERSION=$(grep -E '^  version' Casks/dorion.rb | awk '{print $2}' | tr -d '"')
 
@@ -33,12 +33,12 @@ jobs:
           ARM_URL="https://github.com/SpikeHD/Dorion/releases/download/v$NEW_VERSION/Dorion_${NEW_VERSION}_aarch64.dmg"
 
           # Download Intel DMG
-          wget -O Dorion_${NEW_VERSION}_x64.dmg "$INTEL_URL"
-          SHA256_INTEL=$(shasum -a 256 Dorion_${NEW_VERSION}_x64.dmg | awk '{print $1}')
+          wget -O "Dorion_${NEW_VERSION}_x64.dmg" "$INTEL_URL"
+          SHA256_INTEL=$(shasum -a 256 "Dorion_${NEW_VERSION}_x64.dmg" | awk '{print $1}')
           
           # Download ARM DMG
-          wget -O Dorion_${NEW_VERSION}_aarch64.dmg "$ARM_URL"
-          SHA256_ARM=$(shasum -a 256 Dorion_${NEW_VERSION}_aarch64.dmg | awk '{print $1}')
+          wget -O "Dorion_${NEW_VERSION}_aarch64.dmg" "$ARM_URL"
+          SHA256_ARM=$(shasum -a 256 "Dorion_${NEW_VERSION}_aarch64.dmg" | awk '{print $1}')
 
           # Update the version, sha256 for both architectures in the cask file
           ruby -i -pe "gsub(/sha256 \".*\"/, \"sha256 \\\"$SHA256_INTEL\\\"\") if /on_intel/ .. /end/" Casks/dorion.rb
@@ -46,14 +46,14 @@ jobs:
           sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" Casks/dorion.rb
 
           # Cleanup the downloaded files
-          rm Dorion_${NEW_VERSION}_x64.dmg
-          rm Dorion_${NEW_VERSION}_aarch64.dmg
+          rm "Dorion_${NEW_VERSION}_x64.dmg"
+          rm "Dorion_${NEW_VERSION}_aarch64.dmg"
 
           # Commit and push the changes directly to the main branch
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git checkout main
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           git add Casks/dorion.rb
           git commit -m "Update Dorion cask to $NEW_VERSION with new SHA-256 checksums"
           git push origin main
