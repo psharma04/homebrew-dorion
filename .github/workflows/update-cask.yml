@@ -27,7 +27,22 @@ jobs:
         if [ "$NEW_VERSION" != "null" ]; then
           # Print the change in versions
           brew livecheck dorion
-          # Update the version in the cask file
+          
+          # Download the new DMG files to compute SHA-256 checksums
+          INTEL_URL="https://github.com/SpikeHD/Dorion/releases/download/v$NEW_VERSION/Dorion_${NEW_VERSION}_x64.dmg"
+          ARM_URL="https://github.com/SpikeHD/Dorion/releases/download/v$NEW_VERSION/Dorion_${NEW_VERSION}_aarch64.dmg"
+
+          # Download Intel DMG
+          wget -O Dorion_${NEW_VERSION}_x64.dmg "$INTEL_URL"
+          SHA256_INTEL=$(shasum -a 256 Dorion_${NEW_VERSION}_x64.dmg | awk '{print $1}')
+          
+          # Download ARM DMG
+          wget -O Dorion_${NEW_VERSION}_aarch64.dmg "$ARM_URL"
+          SHA256_ARM=$(shasum -a 256 Dorion_${NEW_VERSION}_aarch64.dmg | awk '{print $1}')
+
+          # Update the version, sha256 for both architectures in the cask file
+          ruby -i -pe "gsub(/sha256 \".*\"/, \"sha256 \\\"$SHA256_INTEL\\\"\") if /on_intel/ .. /end/" Casks/dorion.rb
+          ruby -i -pe "gsub(/sha256 \".*\"/, \"sha256 \\\"$SHA256_ARM\\\"\") if /on_arm/ .. /end/" Casks/dorion.rb
           sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" Casks/dorion.rb
 
           # Commit and push the changes directly to the main branch
@@ -36,7 +51,7 @@ jobs:
           git checkout main
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git add Casks/dorion.rb
-          git commit -m "Update Dorion cask to $NEW_VERSION"
+          git commit -m "Update Dorion cask to $NEW_VERSION with new SHA-256 checksums"
           git push origin main
         else
           echo "No new version found"
