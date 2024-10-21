@@ -1,5 +1,5 @@
 cask "dorion" do
-  version "null"
+  version "6.0.0"
 
   if Hardware::CPU.intel?
     url "https://github.com/SpikeHD/Dorion/releases/download/v#{version}/Dorion_#{version}_x64.dmg"
