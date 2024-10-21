@@ -1,4 +1,10 @@
-# Psharma04's Dorion Tap
+# psharma04's Dorion Tap
+
+## What is Dorion?
+
+Dorion is an alternative Discord client aimed towards lower-spec or storage-sensitive PCs that supports themes, plugins, and more!
+
+You can [find out more information here](https://github.com/SpikeHD/Dorion).
 
 ## How do I install Dorion via Homebrew?
 
