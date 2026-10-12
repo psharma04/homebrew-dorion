@@ -1,5 +1,5 @@
 cask "dorion" do
-  version "6.12.2"
+  version "6.13.2"
 
   on_arm do
     sha256 "06b90cdca31dc65d5e2c5d8a8d760c4b3533b384734af7e93f15235e68b8a4ef"

@@ -10,12 +10,13 @@ You can [find out more information here](https://github.com/SpikeHD/Dorion).
 
 `brew install psharma04/dorion/dorion`
 
-Or `brew tap psharma04/dorion` and then `brew install --cask dorion`.
+Or `brew tap psharma04/dorion`, then `brew trust psharma04/dorion` and then `brew install --cask dorion`.
 
 Or, in a [`brew bundle`](https://github.com/Homebrew/homebrew-bundle) `Brewfile`:
 
 ```ruby
 tap "psharma04/dorion"
+trust "psharma04/dorion"
 brew "dorion"
 ```
 
