@@ -23,7 +23,7 @@ cask "dorion" do
 
   auto_updates true
 
-  app "Dorion.app"
+  app "Dorion.app" depends_on :macos
 
   zap trash: [
     "~/Library/Application Support/Dorion",
